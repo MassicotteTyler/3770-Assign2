@@ -148,16 +148,17 @@ LRESULT CALLBACK HelloWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 
 		si.cbSize = sizeof(si);
 		si.fMask = SIF_RANGE | SIF_PAGE;
-		si.nMin = 0;
-		si.nMax = 2000;
+		si.nMin = 1;
+		si.nMax = 1000;
 		si.nPage = cyClient;
 		SetScrollInfo(hwnd, SB_VERT, &si, TRUE);
 
 		si.cbSize = sizeof(si);
-		si.fMask = SIF_RANGE | SIF_PAGE;
-		si.nMin = 0;
-		si.nMax = 2000;
-		si.nPage = cxClient;
+		si.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;
+		si.nMin = -500;
+		si.nMax = 500;
+		si.nPage = 1;
+		si.nPos = 0;
 		SetScrollInfo(hwnd, SB_HORZ, &si, TRUE);
 
 		return 0;
@@ -201,7 +202,7 @@ LRESULT CALLBACK HelloWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 
 		if (si.nPos != iHorzPos)
 		{
-			ScrollWindow(hwnd, iHorzPos - si.nPos, 0, &rect2, &rect2);
+			ScrollWindow(hwnd, iHorzPos - si.nPos, 0, &rect, &rect);
 			InvalidateRect(hwnd, &rect, true);
 			UpdateWindow(hwnd);
 		}
@@ -253,8 +254,8 @@ LRESULT CALLBACK HelloWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 
 		if (si.nPos != iVertPos){
 			//ScrollWindow(hwnd, 0, iVertPos - si.nPos, NULL, NULL);
-			//InvalidateRect(hwnd, &rect, true);
-			//UpdateWindow(hwnd);
+			InvalidateRect(hwnd, &rect, true);
+			UpdateWindow(hwnd);
 		}
 		return 0;
 
@@ -269,10 +270,15 @@ LRESULT CALLBACK HelloWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 		Rectangle(hdc, 50, 50, cxClient - 50, cyClient - 50);
 		
 		hGreenPen = CreatePen(PS_SOLID, 2, RGB(0, 255, 0));
-		SelectObject(hdc, hGreenPen);
+		
 
-		//SetViewportOrgEx(hdc, cxClient / 2, cyClient / 2, NULL);
-		Rectangle(hdc, 300 - iHorzPos, 100, 500 - iHorzPos, 300);
+		SetViewportOrgEx(hdc, cxClient/2, cyClient / 2, NULL);
+		SetMapMode(hdc, MM_ANISOTROPIC);
+		SetViewportExtEx(hdc, 50 +iVertPos, 50 + iVertPos, NULL);
+		SetWindowExtEx(hdc, 50, 50, NULL);
+
+		SelectObject(hdc, hGreenPen);
+		Rectangle(hdc,  -50 + iHorzPos, 50,  50 + iHorzPos, -50);
 
 		EndPaint(hwnd, &ps);//release the device context
 		return 0;
