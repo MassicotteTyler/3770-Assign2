@@ -268,7 +268,7 @@ LRESULT CALLBACK HelloWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 		
 		Rectangle(hdc, 50, 50, cxClient - 50, cyClient - 50);
 		
-		hGreenPen = CreatePen(PS_SOLID, 5, RGB(0, 255, 0));
+		hGreenPen = CreatePen(PS_SOLID, 2, RGB(0, 255, 0));
 		SelectObject(hdc, hGreenPen);
 
 		//SetViewportOrgEx(hdc, cxClient / 2, cyClient / 2, NULL);
